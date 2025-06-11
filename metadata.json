@@ -1,0 +1,4 @@
+{
+  "name": "NelerYapp",
+  "description": "Generates ideas, suggestions, and visual aids based on user-provided text using Gemini API, and stores search history locally."
+}

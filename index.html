@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neler Yapp - Idea Spark</title>
+    <link rel="stylesheet" href="index.css">
+    <script type="module" src="index.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.4.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <main id="app-container">
+        <header id="app-header">
+            <h1 data-translate-key="appTitle">Neler Yapp - Idea Spark</h1>
+            <button id="settings-button" aria-label="Open settings" data-translate-key="settingsButtonLabel">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor">
+                    <path d="M0 0h24v24H0V0z" fill="none"/>
+                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.23,5.03C8.64,5.26,8.11,5.59,7.61,5.97L5.22,5.01C5,4.94,4.75,5.01,4.63,5.23L2.71,8.55 C2.6,8.76,2.65,9.02,2.83,9.16l2.03,1.58C4.82,11.06,4.8,11.37,4.8,11.69c0,0.32,0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.38,2.22 c0.04,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43,0.17,0.47,0.41l0.38-2.22c0.59-0.23,1.12-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0.01,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.61-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.61,3.6,3.6S13.98,15.6,12,15.6z"/>
+                </svg>
+                <span class="sr-only" data-translate-key="settingsButtonText">Settings</span>
+            </button>
+        </header>
+        
+        <div id="input-area-wrapper" style="position: relative;">
+            <div id="input-area">
+                <label for="main-text-input" class="sr-only" data-translate-key="mainInputLabel">Enter your text, topic, or keywords:</label>
+                <input type="text" id="main-text-input" placeholder="e.g., sustainable living, history of jazz, quick dinner ideas" data-translate-key="mainInputPlaceholder" aria-label="Main text input" autocomplete="off" aria-haspopup="listbox" aria-expanded="false" aria-controls="custom-suggestions-container">
+                <button id="generate-ideas-button" data-translate-key="generateIdeasButton">Get Ideas</button>
+            </div>
+            <div id="custom-suggestions-container" class="custom-suggestions" role="listbox" style="display: none;">
+                <!-- Custom suggestions will be injected here -->
+            </div>
+        </div>
+
+        <div id="loading-indicator" style="display:none;" role="status" aria-label="Loading ideas" data-translate-key="loadingIndicatorText">Loading...</div>
+        <div id="error-message" style="display:none; color: red;" role="alert"></div>
+
+        <section id="suggestions-section" aria-labelledby="suggestions-heading">
+            <h2 id="suggestions-heading" class="sr-only" data-translate-key="suggestionsHeading">Suggested Ideas</h2>
+            <div id="suggestions-container">
+                <!-- Suggestion cards will be injected here -->
+            </div>
+        </section>
+
+        <section id="history-section" aria-labelledby="history-heading">
+            <h2 id="history-heading-visible" data-translate-key="historyHeading">Search History</h2>
+            <ul id="history-list">
+                <!-- History items will be injected here -->
+            </ul>
+        </section>
+    </main>
+
+    <div id="settings-modal" class="modal" style="display:none;" aria-labelledby="settings-modal-title" role="dialog" aria-modal="true">
+        <div class="modal-overlay" tabindex="-1"></div>
+        <div class="modal-content">
+            <header class="modal-header">
+                <h2 id="settings-modal-title" data-translate-key="settingsModalTitle">Settings</h2>
+                <button id="close-settings-modal-button" class="modal-close-button" aria-label="Close settings modal" data-translate-key="closeSettingsButtonLabel">
+                    &times;
+                </button>
+            </header>
+            <section class="modal-body">
+                <div class="settings-group">
+                    <label for="api-key-status" data-translate-key="apiKeyStatusLabel">API Key Status:</label>
+                    <p id="api-key-status-text" class="api-key-status-display"></p>
+                </div>
+                <div class="settings-group">
+                    <label for="language-select" data-translate-key="languageSelectLabel">Language:</label>
+                    <select id="language-select">
+                        <option value="en">English</option>
+                        <option value="tr">Türkçe</option>
+                    </select>
+                </div>
+                <div class="settings-group">
+                    <label for="theme-select" data-translate-key="themeSelectLabel">Theme:</label>
+                    <select id="theme-select">
+                        <option value="light" data-translate-key="themeLight">Light</option>
+                        <option value="dark" data-translate-key="themeDark">Dark</option>
+                    </select>
+                </div>
+            </section>
+            <footer class="modal-footer">
+                <button id="cancel-settings-button" class="button-secondary" data-translate-key="cancelButton">Cancel</button>
+                <button id="save-settings-button" data-translate-key="saveButton">Save Settings</button>
+            </footer>
+        </div>
+    </div>
+
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
